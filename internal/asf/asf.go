@@ -95,3 +95,24 @@ func IsAsf(fileHeader []byte) bool {
 	n := bytes.Compare(fileHeader, asfFileHeaderGuid)
 	return n == 0
 }
+
+type AsfTags struct {
+	raw map[string]string
+}
+
+func (this *AsfTags) Title() string {
+	return this.raw["title"]
+}
+
+func (this *AsfTags) AlbumArtist() string {
+	return this.raw["albumArtist"]
+}
+
+func (this *AsfTags) Artist() string {
+	return this.raw["artist"]
+}
+
+func (this *AsfTags) Raw() *map[string]string {
+	return &(this.raw)
+}
+
