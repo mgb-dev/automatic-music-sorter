@@ -1,5 +1,9 @@
 package asf
 
+import (
+	"io"
+)
+
 // Advanced File System's Magic Word
 var asfFileHeaderGuid asfGuid = []byte{
 	0x30,
@@ -114,5 +118,14 @@ func (this *AsfTags) Artist() string {
 
 func (this *AsfTags) Raw() *map[string]string {
 	return &(this.raw)
+}
+
+func ReadBytes(rPtr *io.ReadSeeker, n int) ([]byte, error) {
+	buf := make([]byte, n)
+	_, err := (*rPtr).Read(buf)
+	if err != nil {
+		return nil, err
+	}
+	return buf, nil
 }
 
