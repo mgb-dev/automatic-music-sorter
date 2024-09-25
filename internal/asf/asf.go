@@ -129,3 +129,11 @@ func ReadBytes(rPtr *io.ReadSeeker, n int) ([]byte, error) {
 	return buf, nil
 }
 
+type asfObject int
+
+const (
+	unknownObj asfObject = iota
+	extendedContentDescriptionObj
+	contentDescriptionObj
+)
+
