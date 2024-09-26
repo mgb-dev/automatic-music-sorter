@@ -7,18 +7,15 @@ import (
 
 type CriteriaType string
 
-type Tags struct {
-	title       string
-	artist      string
-	albumArtist string
-	raw         map[string]string
-}
-
 type Metadata interface {
 	Title() string
 	Artist() string
 	AlbumArtist() string
 	Raw() map[string]interface{}
+}
+
+type Tags struct {
+	raw map[string]string
 }
 
 func (a *Tags) Title() string {
