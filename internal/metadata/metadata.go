@@ -11,7 +11,7 @@ type Metadata interface {
 	Title() string
 	Artist() string
 	AlbumArtist() string
-	Raw() map[string]interface{}
+	Raw() *map[string]string
 }
 
 type Tags struct {
@@ -30,8 +30,8 @@ func (a *Tags) Artist() string {
 	return a.raw["artist"]
 }
 
-func (a *Tags) Raw() map[string]string {
-	return a.raw
+func (a *Tags) Raw() *map[string]string {
+	return &(a.raw)
 }
 
 var criteriaList []CriteriaType = []CriteriaType{"albumartist", "artist", "title"}
