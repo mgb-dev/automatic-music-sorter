@@ -43,7 +43,9 @@ func main() {
 			log.Fatal("Metadata parsing error: ", err)
 		}
 		defer file.Close()
-		tagData, ok := m.Raw()[criteria]
+
+		tMap := *(m.Raw())
+		tagData, ok := tMap[criteria]
 		if !ok {
 			fmt.Printf("%s not found\n skipping file...\n\n", criteria)
 			continue
