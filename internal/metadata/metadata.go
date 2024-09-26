@@ -1,5 +1,10 @@
 package metadata
 
+import (
+	"slices"
+	"strings"
+)
+
 type CriteriaType string
 
 type Tags struct {
