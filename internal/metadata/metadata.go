@@ -39,3 +39,16 @@ var criteriaList []CriteriaType = []CriteriaType{"albumartist", "artist", "title
 func IsValidCriteria(str string) bool {
 	return slices.Contains(criteriaList, CriteriaType(strings.ToLower(str)))
 }
+
+func convert(m *map[string]interface{}) *Tags {
+	result := map[string]string{}
+	dM := *m
+	for k := range dM {
+		if v, ok := dM[k].(string); ok {
+			result[k] = v
+		}
+	}
+
+	return &Tags{raw: result}
+}
+
