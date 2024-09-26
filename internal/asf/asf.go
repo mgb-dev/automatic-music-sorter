@@ -85,7 +85,7 @@ func getGuid(o asfObject) *asfGuid {
 // unused   6 bytes
 // = total 30 bytes
 const (
-	asfObjGuidSize      = 16
+	AsfObjGuidSize      = 16
 	asfObjSize          = 8
 	asfFileHeaderSize   = 8
 	asfFileHeaderUnused = 6
@@ -211,8 +211,8 @@ func findAsfObject(dPtr *[]byte, sPtr *[]ByteSequence, asfObjectType asfObject) 
 	bSeq := *new(ByteSequence)
 
 	for i := 0; i < len(data); {
-		header := data[i:(i + asfObjGuidSize)]
-		i += asfObjGuidSize
+		header := data[i:(i + AsfObjGuidSize)]
+		i += AsfObjGuidSize
 		size := int(binary.LittleEndian.Uint16(data[i:(i + asfObjSize - 1)]))
 		i += asfObjSize
 		if bytes.Compare(header, guid) != 0 {
@@ -222,7 +222,7 @@ func findAsfObject(dPtr *[]byte, sPtr *[]ByteSequence, asfObjectType asfObject) 
 
 		bSeq.ObjType = asfObjectType
 		bSeq.Start = i
-		bSeq.End = i + (size - asfObjGuidSize - asfObjSize)
+		bSeq.End = i + (size - AsfObjGuidSize - asfObjSize)
 		break
 
 	}
@@ -236,7 +236,7 @@ func findAsfObject(dPtr *[]byte, sPtr *[]ByteSequence, asfObjectType asfObject) 
 
 func ReadAsf(rPtr *io.ReadSeeker) (*AsfTags, error) {
 	r := *rPtr
-	if _, err := r.Seek(asfObjGuidSize, io.SeekStart); err != nil {
+	if _, err := r.Seek(AsfObjGuidSize, io.SeekStart); err != nil {
 		return nil, err
 	}
 
