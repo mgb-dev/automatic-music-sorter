@@ -1,7 +1,11 @@
 package asf
 
 import (
+	"bytes"
+	"encoding/binary"
+	"errors"
 	"io"
+	"strings"
 )
 
 // Advanced File System's Magic Word
@@ -129,6 +133,18 @@ func ReadBytes(rPtr *io.ReadSeeker, n int) ([]byte, error) {
 	return buf, nil
 }
 
+func toInt(buf []byte, mode string) int {
+	if mode == "BE" {
+		return int(binary.BigEndian.Uint16(buf))
+	}
+
+	return int(binary.LittleEndian.Uint16(buf))
+}
+
+func removeNullChar(s string) string {
+	return strings.Replace(s, "\x00", "", -1)
+}
+
 type asfObject int
 
 const (
@@ -137,3 +153,120 @@ const (
 	contentDescriptionObj
 )
 
+func parseContentDescription(bufPtr *[]byte, seq *ByteSequence) *AsfTags {
+	buf := (*bufPtr)[seq.Start:seq.End]
+	t := new(AsfTags)
+	mT := make(map[string]string)
+	// Descriptors count: 2 bytes
+	for i := 2; i < len(buf); {
+	}
+}
+
+func parseExtendedContentDescription(bufPtr *[]byte, seq *ByteSequence) *AsfTags {
+	// Structure of data:
+	// GUID: 16 bytes (already removed)
+	// obj size: 8 bytes (already removed)
+	buf := (*bufPtr)[seq.Start:seq.End]
+	t := new(AsfTags)
+	mT := make(map[string]string)
+	// Descriptors count: 2 bytes
+	for i := 2; i < len(buf); {
+
+		descNameLen := toInt(buf[i:i+2], "LE")
+		i += 2
+		descName := removeNullChar(string(buf[i : i+descNameLen]))
+		i += descNameLen + 2
+		descValueLen := toInt(buf[i:i+2], "LE")
+		i += 2
+		descValue := removeNullChar(string(buf[i : i+descValueLen]))
+		i += descValueLen
+		key := strings.ToLower(strings.ReplaceAll(descName, "WM/", ""))
+		value := strings.ToLower(strings.ReplaceAll(descValue, " ", "-"))
+
+		mT[key] = value
+	}
+	t.raw = mT
+
+	return t
+}
+
+func parseAsfObj(bufPtr *[]byte, seq *ByteSequence) *AsfTags {
+	switch seq.ObjType {
+	case extendedContentDescriptionObj:
+		return parseExtendedContentDescription(bufPtr, seq)
+	case contentDescriptionObj:
+		return nil
+
+	default:
+		return nil
+	}
+}
+
+// Receives
+func findAsfObject(dPtr *[]byte, sPtr *[]ByteSequence, asfObjectType asfObject) error {
+	// asf header objs have this form [16 bytes GUID][8 bytes obj size including header][data n bytes]
+	guid := *getGuid(asfObjectType)
+
+	data := *dPtr
+	bSeq := *new(ByteSequence)
+
+	for i := 0; i < len(data); {
+		header := data[i:(i + asfObjGuidSize)]
+		i += asfObjGuidSize
+		size := int(binary.LittleEndian.Uint16(data[i:(i + asfObjSize - 1)]))
+		i += asfObjSize
+		if bytes.Compare(header, guid) != 0 {
+			i = size
+			continue
+		}
+
+		bSeq.ObjType = asfObjectType
+		bSeq.Start = i
+		bSeq.End = i + (size - asfObjGuidSize - asfObjSize)
+		break
+
+	}
+
+	if bSeq.End == 0 {
+		return noMatchingGuidError
+	}
+
+	return nil
+}
+
+func ReadAsf(rPtr *io.ReadSeeker) (*AsfTags, error) {
+	r := *rPtr
+	if _, err := r.Seek(asfObjGuidSize, io.SeekStart); err != nil {
+		return nil, err
+	}
+
+	buf := make([]byte, asfFileHeaderSize)
+	if _, err := r.Read(buf); err != nil {
+		return nil, err
+	}
+	headerSize := int(binary.LittleEndian.Uint16(buf))
+	if _, err := r.Seek(asfFileHeaderUnused, io.SeekCurrent); err != nil {
+		return nil, err
+	}
+	dataSlice := make([]byte, headerSize)
+	if _, err := r.Read(dataSlice); err != nil {
+		return nil, err
+	}
+
+	obj := new(AsfTags)
+	sByteSeq := new([]ByteSequence)
+
+	err := findAsfObject(&dataSlice, extendedContentDescriptionObj)
+	if errors.Is(err, noMatchingGuidError) {
+		objSeq, err = findAsfObject(&dataSlice, contentDescriptionObj)
+		if err != nil {
+			return nil, err
+		}
+	} else if err != nil {
+		return nil, err
+	}
+
+	obj = parseAsfObj(&dataSlice, objSeq)
+
+	return obj, nil
+}
