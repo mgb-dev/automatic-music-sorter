@@ -93,7 +93,7 @@ const (
 
 var noMatchingGuidError = errors.New("No match found for given GUID")
 
-type ByteSequence struct {
+type byteSequence struct {
 	ObjType asfObject
 	Start   int
 	End     int
@@ -160,9 +160,10 @@ func parseContentDescription(bufPtr *[]byte, seq *ByteSequence) *AsfTags {
 	// Descriptors count: 2 bytes
 	for i := 2; i < len(buf); {
 	}
+func parseContentDescription(bufPtr *[]byte, seq *byteSequence) *AsfTags {
 }
 
-func parseExtendedContentDescription(bufPtr *[]byte, seq *ByteSequence) *AsfTags {
+func parseExtendedContentDescription(bufPtr *[]byte, seq *byteSequence) *AsfTags {
 	// Structure of data:
 	// GUID: 16 bytes (already removed)
 	// obj size: 8 bytes (already removed)
@@ -190,7 +191,7 @@ func parseExtendedContentDescription(bufPtr *[]byte, seq *ByteSequence) *AsfTags
 	return t
 }
 
-func parseAsfObj(bufPtr *[]byte, seq *ByteSequence) *AsfTags {
+func parseAsfObj(bufPtr *[]byte, seq *byteSequence) *AsfTags {
 	switch seq.ObjType {
 	case extendedContentDescriptionObj:
 		return parseExtendedContentDescription(bufPtr, seq)
