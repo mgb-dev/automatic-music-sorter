@@ -104,23 +104,23 @@ func IsAsf(fileHeader []byte) bool {
 	return n == 0
 }
 
-type AsfTags struct {
+type asfTags struct {
 	raw map[string]string
 }
 
-func (this *AsfTags) Title() string {
+func (this *asfTags) Title() string {
 	return this.raw["title"]
 }
 
-func (this *AsfTags) AlbumArtist() string {
+func (this *asfTags) AlbumArtist() string {
 	return this.raw["albumArtist"]
 }
 
-func (this *AsfTags) Artist() string {
+func (this *asfTags) Artist() string {
 	return this.raw["artist"]
 }
 
-func (this *AsfTags) Raw() *map[string]string {
+func (this *asfTags) Raw() *map[string]string {
 	return &(this.raw)
 }
 
@@ -160,15 +160,15 @@ func parseContentDescription(bufPtr *[]byte, seq *ByteSequence) *AsfTags {
 	// Descriptors count: 2 bytes
 	for i := 2; i < len(buf); {
 	}
-func parseContentDescription(bufPtr *[]byte, seq *byteSequence) *AsfTags {
+func parseContentDescription(bufPtr *[]byte, seq *byteSequence) *asfTags {
 }
 
-func parseExtendedContentDescription(bufPtr *[]byte, seq *byteSequence) *AsfTags {
+func parseExtendedContentDescription(bufPtr *[]byte, seq *byteSequence) *asfTags {
 	// Structure of data:
 	// GUID: 16 bytes (already removed)
 	// obj size: 8 bytes (already removed)
 	buf := (*bufPtr)[seq.Start:seq.End]
-	t := new(AsfTags)
+	t := new(asfTags)
 	mT := make(map[string]string)
 	// Descriptors count: 2 bytes
 	for i := 2; i < len(buf); {
@@ -191,7 +191,7 @@ func parseExtendedContentDescription(bufPtr *[]byte, seq *byteSequence) *AsfTags
 	return t
 }
 
-func parseAsfObj(bufPtr *[]byte, seq *byteSequence) *AsfTags {
+func parseAsfObj(bufPtr *[]byte, seq *byteSequence) *asfTags {
 	switch seq.ObjType {
 	case extendedContentDescriptionObj:
 		return parseExtendedContentDescription(bufPtr, seq)
@@ -235,7 +235,7 @@ func findAsfObject(dPtr *[]byte, sPtr *[]ByteSequence, asfObjectType asfObject) 
 	return nil
 }
 
-func ReadAsf(rPtr *io.ReadSeeker) (*AsfTags, error) {
+func ReadAsf(rPtr *io.ReadSeeker) (*asfTags, error) {
 	r := *rPtr
 	if _, err := r.Seek(AsfObjGuidSize, io.SeekStart); err != nil {
 		return nil, err
