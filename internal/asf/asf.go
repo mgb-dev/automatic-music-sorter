@@ -192,11 +192,10 @@ func parseExtendedContentDescription(bufPtr *[]byte, seq *byteSequence) *asfMap 
 
 func parseAsfObj(bufPtr *[]byte, seq *byteSequence) *asfMap {
 	switch seq.ObjType {
+	case contentDescriptionObj:
+		return parseContentDescription(bufPtr, seq)
 	case extendedContentDescriptionObj:
 		return parseExtendedContentDescription(bufPtr, seq)
-	case contentDescriptionObj:
-		return nil
-
 	default:
 		return nil
 	}
