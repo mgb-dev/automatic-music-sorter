@@ -228,10 +228,10 @@ func findAsfObject(dPtr *[]byte, sPtr *[]ByteSequence, asfObjectType asfObject) 
 	}
 
 	if bSeq.End == 0 {
-		return noMatchingGuidError
+		return bSeq, noMatchingGuidError
 	}
 
-	return nil
+	return bSeq, nil
 }
 
 func ReadAsf(rPtr *io.ReadSeeker) (*asfTags, error) {
