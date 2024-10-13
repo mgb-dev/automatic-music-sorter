@@ -145,7 +145,10 @@ func removeNullChar(s string) string {
 	return strings.Replace(s, "\x00", "", -1)
 }
 
-type asfObject int
+type (
+	asfObject int
+	asfMap    map[string]string
+)
 
 const (
 	unknownObj asfObject = iota
