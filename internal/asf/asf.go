@@ -201,8 +201,8 @@ func parseAsfObj(bufPtr *[]byte, seq *byteSequence) *asfMap {
 	}
 }
 
-// Receives
-func findAsfObject(dPtr *[]byte, sPtr *[]ByteSequence, asfObjectType asfObject) error {
+// finds asfObjectType and returns a ByteSequence referencing said data
+func findAsfObject(dPtr *[]byte, asfObjectType asfObject) (byteSequence, error) {
 	// asf header objs have this form [16 bytes GUID][8 bytes obj size including header][data n bytes]
 	guid := *getGuid(asfObjectType)
 
