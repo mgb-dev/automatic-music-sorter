@@ -156,17 +156,16 @@ const (
 	contentDescriptionObj
 )
 
-func parseContentDescription(bufPtr *[]byte, seq *ByteSequence) *AsfTags {
+func parseContentDescription(bufPtr *[]byte, seq *byteSequence) *asfMap {
 	buf := (*bufPtr)[seq.Start:seq.End]
 	t := new(AsfTags)
 	mT := make(map[string]string)
 	// Descriptors count: 2 bytes
 	for i := 2; i < len(buf); {
 	}
-func parseContentDescription(bufPtr *[]byte, seq *byteSequence) *asfTags {
 }
 
-func parseExtendedContentDescription(bufPtr *[]byte, seq *byteSequence) *asfTags {
+func parseExtendedContentDescription(bufPtr *[]byte, seq *byteSequence) *asfMap {
 	// Structure of data:
 	// GUID: 16 bytes (already removed)
 	// obj size: 8 bytes (already removed)
@@ -194,7 +193,7 @@ func parseExtendedContentDescription(bufPtr *[]byte, seq *byteSequence) *asfTags
 	return t
 }
 
-func parseAsfObj(bufPtr *[]byte, seq *byteSequence) *asfTags {
+func parseAsfObj(bufPtr *[]byte, seq *byteSequence) *asfMap {
 	switch seq.ObjType {
 	case extendedContentDescriptionObj:
 		return parseExtendedContentDescription(bufPtr, seq)
