@@ -170,8 +170,7 @@ func parseExtendedContentDescription(bufPtr *[]byte, seq *byteSequence) *asfMap 
 	// GUID: 16 bytes (already removed)
 	// obj size: 8 bytes (already removed)
 	buf := (*bufPtr)[seq.Start:seq.End]
-	t := new(asfTags)
-	mT := make(map[string]string)
+	mT := asfMap{}
 	// Descriptors count: 2 bytes
 	for i := 2; i < len(buf); {
 
@@ -188,9 +187,7 @@ func parseExtendedContentDescription(bufPtr *[]byte, seq *byteSequence) *asfMap 
 
 		mT[key] = value
 	}
-	t.raw = mT
-
-	return t
+	return &mT
 }
 
 func parseAsfObj(bufPtr *[]byte, seq *byteSequence) *asfMap {
