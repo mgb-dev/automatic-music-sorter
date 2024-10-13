@@ -207,7 +207,7 @@ func findAsfObject(dPtr *[]byte, asfObjectType asfObject) (byteSequence, error) 
 	guid := *getGuid(asfObjectType)
 
 	data := *dPtr
-	bSeq := *new(ByteSequence)
+	var bSeq byteSequence
 
 	for i := 0; i < len(data); {
 		header := data[i:(i + AsfObjGuidSize)]
