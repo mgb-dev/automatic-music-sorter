@@ -145,6 +145,18 @@ func removeNullChar(s string) string {
 	return strings.Replace(s, "\x00", "", -1)
 }
 
+func mergeMap(target *asfMap, m1 *asfMap, m2 *asfMap) {
+	t := *target
+	for k, v := range *m1 {
+		t[k] = v
+	}
+	for k, v := range *m2 {
+		t[k] = v
+	}
+
+	*target = t
+}
+
 type (
 	asfObject int
 	asfMap    map[string]string
