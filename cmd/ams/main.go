@@ -31,7 +31,9 @@ func main() {
 			continue
 		}
 
-		fmt.Println("File: ", fileEntry.Name())
+		filename := fileEntry.Name()
+
+		fmt.Println("File: ", filename)
 		filePath := workingDir + fileEntry.Name()
 		file, err := os.Open(filePath)
 		if err != nil {
@@ -52,7 +54,7 @@ func main() {
 		}
 		newDirectory := workingDir + tagData
 		// mT := m.Raw()
-		fmt.Printf("dir: %s => %s\n", newDirectory, tagData)
+		fmt.Printf("New dir: %s => %s\n", newDirectory, filename)
 
 		// if err := os.Mkdir(newDirectory, os.ModeDir); err != nil {
 		// 	log.Fatal("Directory Creating error: ", err)
