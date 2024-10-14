@@ -158,11 +158,17 @@ const (
 
 func parseContentDescription(bufPtr *[]byte, seq *byteSequence) *asfMap {
 	buf := (*bufPtr)[seq.Start:seq.End]
-	t := new(AsfTags)
-	mT := make(map[string]string)
-	// Descriptors count: 2 bytes
-	for i := 2; i < len(buf); {
-	}
+	i := 0
+
+	tLen := toInt(buf[i:i+2], "LE")
+	i += 2
+	aLen := toInt(buf[i:i+2], "LE")
+	// skip 8 bytes to read title
+	i += 8
+	title := removeNullChar(string(buf[i : i+tLen+1]))
+	i += tLen
+	author := removeNullChar(string(buf[i : i+aLen+1]))
+	return &asfMap{"title": title, "artist": author}
 }
 
 func parseExtendedContentDescription(bufPtr *[]byte, seq *byteSequence) *asfMap {
