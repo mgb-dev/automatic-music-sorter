@@ -46,14 +46,12 @@ func main() {
 		}
 		defer file.Close()
 
-		tMap := *(m.Raw())
-		tagData, ok := tMap[criteria]
+		tagData, ok := (*m.Raw())[criteria]
 		if !ok {
 			fmt.Printf("%s not found\n skipping file...\n\n", criteria)
 			continue
 		}
 		newDirectory := workingDir + tagData
-		// mT := m.Raw()
 		fmt.Printf("New dir: %s => %s\n", newDirectory, filename)
 
 		// if err := os.Mkdir(newDirectory, os.ModeDir); err != nil {
