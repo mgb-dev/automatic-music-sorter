@@ -270,20 +270,28 @@ func ReadAsf(rPtr *io.ReadSeeker) (*asfTags, error) {
 		return nil, err
 	}
 
-	obj := new(AsfTags)
-	sByteSeq := new([]ByteSequence)
+	noCont := false
+	contSeq, err := findAsfObject(&dataSlice, contentDescriptionObj)
+	if err != nil && !errors.Is(err, noMatchingGuidError) {
+		return nil, err
+	} else if errors.Is(err, noMatchingGuidError) {
+		noCont = true
+	}
 
-	err := findAsfObject(&dataSlice, extendedContentDescriptionObj)
-	if errors.Is(err, noMatchingGuidError) {
-		objSeq, err = findAsfObject(&dataSlice, contentDescriptionObj)
-		if err != nil {
-			return nil, err
-		}
-	} else if err != nil {
+	extSeq, err := findAsfObject(&dataSlice, extendedContentDescriptionObj)
+	if err != nil {
 		return nil, err
 	}
 
-	obj = parseAsfObj(&dataSlice, objSeq)
+	if noCont {
+		extMapPtr := parseAsfObj(&dataSlice, &extSeq)
+		return &asfTags{raw: *extMapPtr}, nil
+	}
+	nMap := asfMap{}
+	conMapPtr := parseAsfObj(&dataSlice, &contSeq)
+	extMapPtr := parseAsfObj(&dataSlice, &extSeq)
 
-	return obj, nil
+	mergeMap(&nMap, conMapPtr, extMapPtr)
+
+	return &asfTags{raw: nMap}, nil
 }
