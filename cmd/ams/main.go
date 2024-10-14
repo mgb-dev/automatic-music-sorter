@@ -48,7 +48,7 @@ func main() {
 
 		tagData, ok := (*m.Raw())[criteria]
 		if !ok {
-			fmt.Printf("%s not found\n skipping file...\n\n", criteria)
+			fmt.Printf("criteria: %s isn't available. Skipping file %s", criteria, filename)
 			continue
 		}
 		newDirectory := workingDir + tagData
