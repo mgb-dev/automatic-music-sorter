@@ -1,6 +1,6 @@
-ARTIFACT_NAME=ams
+BINARY_NAME=ams
+run: build
+	./${BINARY_NAME}
 
-run:
-	@go run cmd/${ARTIFACT_NAME}/main.go
 build:
 	@go build -o ${BINARY_NAME} cmd/${BINARY_NAME}/main.go
