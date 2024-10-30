@@ -230,10 +230,12 @@ func findAsfObject(dPtr *[]byte, asfObjectType asfObject) (byteSequence, error) 
 	for i := 0; i < len(data); {
 		header := data[i:(i + AsfObjGuidSize)]
 		i += AsfObjGuidSize
-		size := int(binary.LittleEndian.Uint16(data[i:(i + asfObjSize - 1)]))
+		size := int(
+			binary.LittleEndian.Uint16(data[i:(i+asfObjSize-1)]),
+		) - AsfObjGuidSize - asfObjSize
 		i += asfObjSize
 		if bytes.Compare(header, guid) != 0 {
-			i = size
+			i += size
 			continue
 		}
 
