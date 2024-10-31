@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	// TODO: setupa proper argument parser
+	// TODO: setup a proper argument parser
 	if len(os.Args) < 3 {
 		fmt.Println("Missing argument: pos 1 - 'work_dir'")
 		fmt.Println("Missing argument: pos 2 - 'criteria'")
