@@ -26,6 +26,9 @@ func main() {
 	}
 	fmt.Println("Working Directory :", workingDir)
 
+	failures := 0
+	successes := 0
+	fileCount := len(dirEntry)
 	for _, fileEntry := range dirEntry {
 		if fileEntry.IsDir() {
 			continue
@@ -37,12 +40,14 @@ func main() {
 		filePath := workingDir + fileEntry.Name()
 		file, err := os.Open(filePath)
 		if err != nil {
+			failures++
 			fmt.Println("File opening error:\n", err)
 			continue
 		}
 
 		m, err := metadata.ReadTags(file)
 		if err != nil {
+			failures++
 			fmt.Println("Metadata parsing error: ", err)
 			continue
 		}
@@ -50,6 +55,7 @@ func main() {
 
 		tagData, ok := (*m.Raw())[criteria]
 		if !ok {
+			failures++
 			fmt.Printf("criteria: %s isn't available. Skipping file %s\n", criteria, filename)
 			continue
 		}
@@ -64,7 +70,13 @@ func main() {
 		// 	log.Fatal("File Relocation error: ", err)
 		// }
 
+		successes++
 	}
 
-	fmt.Println("Program terminated successfully")
+	fmt.Printf(
+		"Finished: Successes: %v file/s moved. Failures: %v file/s unchanged. Total files: %v\n",
+		successes,
+		failures,
+		fileCount,
+	)
 }
