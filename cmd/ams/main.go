@@ -37,18 +37,20 @@ func main() {
 		filePath := workingDir + fileEntry.Name()
 		file, err := os.Open(filePath)
 		if err != nil {
-			log.Fatal("File opening error:\n", err)
+			fmt.Println("File opening error:\n", err)
+			continue
 		}
 
 		m, err := metadata.ReadTags(file)
 		if err != nil {
-			log.Fatal("Metadata parsing error: ", err)
+			fmt.Println("Metadata parsing error: ", err)
+			continue
 		}
 		defer file.Close()
 
 		tagData, ok := (*m.Raw())[criteria]
 		if !ok {
-			fmt.Printf("criteria: %s isn't available. Skipping file %s", criteria, filename)
+			fmt.Printf("criteria: %s isn't available. Skipping file %s\n", criteria, filename)
 			continue
 		}
 		newDirectory := workingDir + tagData
