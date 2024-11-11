@@ -177,9 +177,9 @@ func parseContentDescription(bufPtr *[]byte, seq *byteSequence) *asfMap {
 	aLen := toInt(buf[i:i+2], "LE")
 	// skip 8 bytes to read title
 	i += 8
-	title := removeNullChar(string(buf[i : i+tLen+1]))
+	title := removeNullChar(string(buf[i : i+tLen]))
 	i += tLen
-	author := removeNullChar(string(buf[i : i+aLen+1]))
+	author := removeNullChar(string(buf[i : i+aLen]))
 	return &asfMap{"title": title, "artist": author}
 }
 
