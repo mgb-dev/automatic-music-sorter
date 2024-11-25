@@ -55,7 +55,7 @@ func main() {
 		defer file.Close()
 
 		tagData, ok := (*m.Raw())[criteria]
-		if !ok {
+		if !ok || tagData == "" {
 			failures++
 			fmt.Printf("criteria: %s isn't available. Skipping file %s\n", criteria, filename)
 			continue
