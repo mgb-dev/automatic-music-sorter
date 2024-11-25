@@ -7,6 +7,7 @@ import (
 	"path"
 
 	"github.com/mgb-dev/ams/internal/metadata"
+	"github.com/mgb-dev/ams/internal/utils"
 )
 
 func main() {
@@ -30,6 +31,9 @@ func main() {
 	failures := 0
 	successes := 0
 	fileCount := len(dirEntry)
+
+	dirList := utils.NewDirList()
+
 	for _, fileEntry := range dirEntry {
 		if fileEntry.IsDir() {
 			continue
@@ -64,13 +68,18 @@ func main() {
 		newFilePath := path.Join(newDirectory, fileEntry.Name())
 		fmt.Printf("moving %s -> %s\n", filePath, newFilePath)
 
-		// if err := os.Mkdir(newDirectory, os.ModeDir); err != nil {
-		// 	log.Fatal("Directory Creating error: ", err)
-		// }
+		if !dirList.Exists(newDirectory) {
+			if err := os.Mkdir(newDirectory, os.ModePerm); err != nil {
+				// This error causes program crash as a security measure
+				log.Fatal("Directory Creating error: ", err)
+			}
+			dirList.Add(newDirectory)
+		}
 
-		// if err := os.Rename(filePath, (newDirectory + fileEntry.Name())); err != nil {
-		// 	log.Fatal("File Relocation error: ", err)
-		// }
+		if err := os.Rename(filePath, newFilePath); err != nil {
+			fmt.Println("File Relocation error: ", err)
+			continue
+		}
 
 		successes++
 	}
