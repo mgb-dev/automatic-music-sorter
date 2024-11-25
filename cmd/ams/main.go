@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path"
 
 	"github.com/mgb-dev/ams/internal/metadata"
 )
@@ -37,7 +38,7 @@ func main() {
 		filename := fileEntry.Name()
 
 		fmt.Println("File: ", filename)
-		filePath := workingDir + fileEntry.Name()
+		filePath := path.Join(workingDir, fileEntry.Name())
 		file, err := os.Open(filePath)
 		if err != nil {
 			failures++
@@ -59,8 +60,9 @@ func main() {
 			fmt.Printf("criteria: %s isn't available. Skipping file %s\n", criteria, filename)
 			continue
 		}
-		newDirectory := workingDir + tagData
-		fmt.Printf("New dir: %s => %s\n", newDirectory, filename)
+		newDirectory := path.Join(workingDir, utils.NormalizeDirName(tagData))
+		newFilePath := path.Join(newDirectory, fileEntry.Name())
+		fmt.Printf("moving %s -> %s\n", filePath, newFilePath)
 
 		// if err := os.Mkdir(newDirectory, os.ModeDir); err != nil {
 		// 	log.Fatal("Directory Creating error: ", err)
