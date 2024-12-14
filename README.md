@@ -4,7 +4,7 @@ Simple CLI tool to sort audio files based on metadata
 
 ## Description
 
-Point a directory (sub directories will be ignored) and create subfolders based on the existing metadata from the files.
+Point a directory (sub directories will be ignored) and create subdirectories based on the existing metadata from the analyzed files.
 
 ## Table of Contents <a id="toc"></a>
 
@@ -13,22 +13,40 @@ Point a directory (sub directories will be ignored) and create subfolders based 
 - [Credits](#credits)
 - [License](#license)
 
-<a id="install"></a>
+## Install <a id="install"></a>
 
-## Install [:arrow_up:](#toc)
+<small>[:arrow_up: Back to toc](#toc)</small>
 
-<a id="usage"></a>
+```bash
+git clone <this-url>
+cd autmatic-music-sorter
+make build
+# Be sure to add ams's directory to your $PATH env variable
+```
 
-## Usage [:arrow_up:](#toc)
+## Usage <a id="usage"></a>
 
-<a id="credits"></a>
+<small>[:arrow_up: Back to toc](#toc)</small>
 
-## Credits [:arrow_up:](#toc)
+> [!WARNING]
+> at this time ams has no "undo" (nor I plan to add one) .i.e ams **will make** modifications to your file system, which cannot be reverted by the program itself.
+
+```bash
+# Navigate into the directory to be sorted and specify a criteria to be sorted by
+# Enjoy the automation
+ams . artist
+```
+
+## Credits <a id="credits"></a>
+
+<small>[:arrow_up: Back to toc](#toc)</small>
 
 This project would not exist without:
 
-[dhowden/tag@Github](https://github.com/dhowden/tag): library to read metadata from audio files
+<a id="tag-link" href="https://github.com/dhowden/tag" target="_blank">dhowden/tag@Github</a> : library to read metadata from audio files
 
-<a id="license"></a>
+## License <a id="license"></a>
 
-## License [:arrow_up:](#toc)
+<small style="justify-self: 'right'">[:arrow_up: Back to toc](#toc)</small>
+
+MIT
