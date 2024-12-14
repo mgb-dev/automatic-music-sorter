@@ -8,6 +8,7 @@ import (
 func NormalizeDirName(str string) string {
 	l := strings.ToLower(str)
 	res := strings.ReplaceAll(l, " ", "-")
+	res = strings.ReplaceAll(res, "/", "")
 	return res
 }
 
