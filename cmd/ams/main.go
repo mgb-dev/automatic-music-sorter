@@ -94,7 +94,7 @@ func main() {
 	}
 
 	fmt.Printf(
-		"Finished: Successes: %v file/s moved. Failures: %v file/s unchanged. Total files: %v\n",
+		"Finished: %v file/s moved, %v file/s unchanged, Total files: %v\n",
 		successes,
 		failures,
 		fileCount,
