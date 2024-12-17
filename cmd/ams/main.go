@@ -19,6 +19,8 @@ func main() {
 	}
 	workingDir := os.Args[1]
 	criteria := os.Args[2]
+
+	isDebugActive := len(os.Args) >= 4 && os.Args[3] == "--debug"
 	if !metadata.IsValidCriteria(criteria) {
 		log.Fatal("Invalid tag: ", criteria)
 	}
@@ -66,19 +68,26 @@ func main() {
 		}
 		newDirectory := path.Join(workingDir, utils.NormalizeDirName(tagData))
 		newFilePath := path.Join(newDirectory, fileEntry.Name())
-		fmt.Printf("moving %s -> %s\n", filePath, newFilePath)
 
 		if !dirList.Exists(newDirectory) {
-			if err := os.Mkdir(newDirectory, os.ModePerm); err != nil {
-				// This error causes program crash as a security measure
-				log.Fatal("Directory Creating error: ", err)
+			if isDebugActive {
+				fmt.Printf("Adding to  DirList: % v\n", newDirectory)
+			} else {
+				if err := os.Mkdir(newDirectory, os.ModePerm); err != nil {
+					// This error causes program crash as a security measure
+					log.Fatal("Directory Creating error: ", err)
+				}
 			}
 			dirList.Add(newDirectory)
 		}
 
-		if err := os.Rename(filePath, newFilePath); err != nil {
-			fmt.Println("File Relocation error: ", err)
-			continue
+		if isDebugActive {
+			fmt.Printf("moving %s -> %s\n", filePath, newFilePath)
+		} else {
+			if err := os.Rename(filePath, newFilePath); err != nil {
+				fmt.Println("File Relocation error: ", err)
+				continue
+			}
 		}
 
 		successes++
