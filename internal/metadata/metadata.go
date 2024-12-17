@@ -45,15 +45,12 @@ func IsValidCriteria(str string) bool {
 	return slices.Contains(criteriaList, CriteriaType(strings.ToLower(str)))
 }
 
-func convert(m *map[string]interface{}) *Tags {
+// Converts tag.Metadata -> ams.metadata.Tags
+func convert(mT *tag.Metadata) *Tags {
 	result := map[string]string{}
-	dM := *m
-	for k := range dM {
-		if v, ok := dM[k].(string); ok {
-			result[k] = v
-		}
-	}
-
+	result["artist"] = (*mT).Artist()
+	result["albumArtist"] = (*mT).AlbumArtist()
+	result["title"] = (*mT).Title()
 	return &Tags{raw: result}
 }
 
@@ -81,8 +78,7 @@ func ReadTags(r io.ReadSeeker) (Metadata, error) {
 	if err != nil {
 		return nil, err
 	}
-	m := mt.Raw()
-	t := convert(&m)
+	t := convert(&mt)
 
 	// TODO: learn more about: X does not implement Y (... method has a pointer receiver)
 	return t, nil
