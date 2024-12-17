@@ -148,9 +148,15 @@ func removeNullChar(s string) string {
 func mergeMap(target *asfMap, m1 *asfMap, m2 *asfMap) {
 	t := *target
 	for k, v := range *m1 {
+		if v == "" {
+			continue
+		}
 		t[k] = v
 	}
 	for k, v := range *m2 {
+		if v == "" {
+			continue
+		}
 		t[k] = v
 	}
 
