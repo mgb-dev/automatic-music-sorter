@@ -20,6 +20,7 @@ func main() {
 	workingDir := os.Args[1]
 	criteria := os.Args[2]
 
+	// in this case "debug means: Run simulated and verbosely"
 	isDebugActive := len(os.Args) >= 4 && os.Args[3] == "--debug"
 	if !metadata.IsValidCriteria(criteria) {
 		log.Fatal("Invalid tag: ", criteria)
