@@ -39,6 +39,7 @@ func main() {
 
 	for _, fileEntry := range dirEntry {
 		if fileEntry.IsDir() {
+			fileCount--
 			continue
 		}
 
