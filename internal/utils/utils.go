@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"slices"
 	"strings"
 )
@@ -10,6 +11,16 @@ func NormalizeDirName(str string) string {
 	res := strings.ReplaceAll(l, " ", "-")
 	res = strings.ReplaceAll(res, "/", "")
 	return res
+}
+
+// Helper function that runs printf conditionally and returns the same boolean
+// It's intended to be used in a if assignment
+func ConditionalPrintf(bool bool, str string, any ...any) bool {
+	if bool {
+		// FIXME: unhandled "Printf" error case
+		fmt.Printf(str, any...)
+	}
+	return bool
 }
 
 type DirList struct {
