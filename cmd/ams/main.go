@@ -86,6 +86,7 @@ func main() {
 			fmt.Printf("moving %s -> %s\n", filePath, newFilePath)
 		} else {
 			if err := os.Rename(filePath, newFilePath); err != nil {
+				failures++
 				fmt.Println("File Relocation error: ", err)
 				continue
 			}
