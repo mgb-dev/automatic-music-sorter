@@ -29,7 +29,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Directory reading error: \n", err)
 	}
-	fmt.Println("Working Directory :", workingDir)
+	utils.ConditionalPrintf(isDebugActive, "Working Directory :%s\n", workingDir)
 
 	failures := 0
 	successes := 0
@@ -45,7 +45,7 @@ func main() {
 
 		filename := fileEntry.Name()
 
-		fmt.Println("File: ", filename)
+		utils.ConditionalPrintf(isDebugActive, "File: %s\n", filename)
 		filePath := path.Join(workingDir, fileEntry.Name())
 		file, err := os.Open(filePath)
 		if err != nil {
@@ -65,27 +65,28 @@ func main() {
 		tagData, ok := (*m.Raw())[criteria]
 		if !ok || tagData == "" {
 			failures++
-			fmt.Printf("criteria: %s isn't available. Skipping file %s\n", criteria, filename)
+			utils.ConditionalPrintf(
+				isDebugActive,
+				"criteria: %s isn't available. Skipping file %s\n",
+				criteria,
+				filename,
+			)
 			continue
 		}
 		newDirectory := path.Join(workingDir, utils.NormalizeDirName(tagData))
 		newFilePath := path.Join(newDirectory, fileEntry.Name())
 
 		if !dirList.Exists(newDirectory) {
-			if isDebugActive {
-				fmt.Printf("Adding to  DirList: % v\n", newDirectory)
-			} else {
+			if b := utils.ConditionalPrintf(isDebugActive, "Adding to  DirList: % v\n", newDirectory); !b {
 				if err := os.Mkdir(newDirectory, os.ModePerm); err != nil {
-					// This error causes program crash as a security measure
+					// FIXME: This error causes program crash as a security measure
 					log.Fatal("Directory Creating error: ", err)
 				}
 			}
 			dirList.Add(newDirectory)
 		}
 
-		if isDebugActive {
-			fmt.Printf("moving %s -> %s\n", filePath, newFilePath)
-		} else {
+		if b := utils.ConditionalPrintf(isDebugActive, "moving %s -> %s\n", filePath, newFilePath); !b {
 			if err := os.Rename(filePath, newFilePath); err != nil {
 				failures++
 				fmt.Println("File Relocation error: ", err)
@@ -96,7 +97,7 @@ func main() {
 		successes++
 	}
 
-	fmt.Printf(
+	utils.ConditionalPrintf(isDebugActive,
 		"Finished: %v file/s moved, %v file/s unchanged, Total files: %v\n",
 		successes,
 		failures,
