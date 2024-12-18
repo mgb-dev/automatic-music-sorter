@@ -50,7 +50,7 @@ func main() {
 		file, err := os.Open(filePath)
 		if err != nil {
 			failures++
-			fmt.Println("File opening error:\n", err)
+			fmt.Println("File opening error:", err)
 			continue
 		}
 
