@@ -57,7 +57,12 @@ func main() {
 		m, err := metadata.ReadTags(file)
 		if err != nil {
 			failures++
-			fmt.Println("Metadata parsing error: ", err)
+			utils.ConditionalPrintf(
+				isDebugActive,
+				"Metadata parsing error: %s. Skipping file %s\n",
+				err,
+				filename,
+			)
 			continue
 		}
 		defer file.Close()
