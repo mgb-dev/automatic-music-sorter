@@ -68,6 +68,12 @@ func main() {
 		defer file.Close()
 
 		tagData, ok := (*m.Raw())[criteria]
+
+		// Fallback to albumArtist if the criteria selected is artist
+		if (!ok || tagData == "") && criteria == "artist" {
+			tagData, ok = (*m.Raw())["albumartist"]
+		}
+
 		if !ok || tagData == "" {
 			failures++
 			utils.ConditionalPrintf(
