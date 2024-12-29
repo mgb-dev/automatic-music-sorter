@@ -17,7 +17,10 @@ func main() {
 		fmt.Println("Missing argument: pos 2 - 'criteria'")
 		return
 	}
-	workingDir := os.Args[1]
+	workingDir, err := utils.ExpandPath(os.Args[1])
+	if err != nil {
+		log.Fatal("Path Parsing error: \n", err)
+	}
 	criteria := os.Args[2]
 
 	// in this case "debug means: Run simulated and verbosely"
