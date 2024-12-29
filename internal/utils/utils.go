@@ -1,7 +1,11 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
+	"os"
+	"path"
+	"path/filepath"
 	"slices"
 	"strings"
 )
@@ -11,6 +15,42 @@ func NormalizeDirName(str string) string {
 	res := strings.ReplaceAll(l, " ", "-")
 	res = strings.ReplaceAll(res, "/", "")
 	return res
+}
+
+var invalidStringPath error = errors.New("Invalid string path")
+
+// Expands `str` into a path string
+func ExpandPath(str string) (string, error) {
+	hp := strings.HasPrefix
+
+	switch true {
+	case hp(str, "./"):
+		cwd, err := os.Getwd()
+		if err != nil {
+			return "", err
+		}
+		path := path.Join(cwd, str[2:])
+		return path, nil
+	case hp(str, "~"):
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			return "", err
+		}
+		return homeDir, nil
+	case hp(str, "~/"):
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			return "", err
+		}
+		path := path.Join(homeDir, str[2:])
+		return path, nil
+	case filepath.IsAbs(str):
+		return str, nil
+	case !(string(str[0]) == "/"):
+		return filepath.Abs(str)
+	default:
+		return "", invalidStringPath
+	}
 }
 
 // Helper function that runs printf conditionally and returns the same boolean
