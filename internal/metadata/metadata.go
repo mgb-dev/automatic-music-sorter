@@ -49,7 +49,7 @@ func IsValidCriteria(str string) bool {
 func convert(mT *tag.Metadata) *Tags {
 	result := map[string]string{}
 	result["artist"] = (*mT).Artist()
-	result["albumArtist"] = (*mT).AlbumArtist()
+	result["albumartist"] = (*mT).AlbumArtist()
 	result["title"] = (*mT).Title()
 	return &Tags{raw: result}
 }
