@@ -87,7 +87,11 @@ func main() {
 			)
 			continue
 		}
-		newDirectory := path.Join(workingDir, utils.NormalizeDirName(tagData))
+		formatedTagData, err := utils.NormalizeDirName(tagData)
+		if err != nil {
+			log.Fatal("Tag data formatting error: ", err)
+		}
+		newDirectory := path.Join(workingDir, formatedTagData)
 		newFilePath := path.Join(newDirectory, filename)
 
 		if !dirList.Exists(newDirectory) {
