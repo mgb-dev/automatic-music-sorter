@@ -4,8 +4,8 @@ run: build
 	./${BINARY_NAME}
 
 build:
-	@go build -o ${BINARY_NAME} cmd/${BINARY_NAME}/main.go
+	@go build -o ./${BINARY_NAME} cmd/${BINARY_NAME}/main.go
 
 clean:
 	@go clean
-	@rm ${BINARY_NAME}
+	@rm ./${BINARY_NAME}
