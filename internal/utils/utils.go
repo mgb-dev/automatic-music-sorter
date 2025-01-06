@@ -6,15 +6,20 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"regexp"
 	"slices"
 	"strings"
 )
 
-func NormalizeDirName(str string) string {
+func NormalizeDirName(str string) (string, error) {
+	r, err := regexp.Compile(`[^\w&-]`)
+	if err != nil {
+		return "", err
+	}
 	l := strings.ToLower(str)
-	res := strings.ReplaceAll(l, " ", "-")
-	res = strings.ReplaceAll(res, "/", "")
-	return res
+	l = strings.ReplaceAll(l, " ", "-")
+	res := r.ReplaceAllString(l, "")
+	return res, nil
 }
 
 var invalidStringPath error = errors.New("Invalid string path")
