@@ -49,7 +49,7 @@ func main() {
 		filename := fileEntry.Name()
 
 		utils.ConditionalPrintf(isDebugActive, "File: %s\n", filename)
-		filePath := path.Join(workingDir, fileEntry.Name())
+		filePath := path.Join(workingDir, filename)
 		file, err := os.Open(filePath)
 		if err != nil {
 			failures++
@@ -88,7 +88,7 @@ func main() {
 			continue
 		}
 		newDirectory := path.Join(workingDir, utils.NormalizeDirName(tagData))
-		newFilePath := path.Join(newDirectory, fileEntry.Name())
+		newFilePath := path.Join(newDirectory, filename)
 
 		if !dirList.Exists(newDirectory) {
 			if b := utils.ConditionalPrintf(isDebugActive, "Adding to  DirList: % v\n", newDirectory); !b {
